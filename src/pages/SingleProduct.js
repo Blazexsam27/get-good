@@ -1,7 +1,112 @@
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import { useProductContext } from "../context/productContext";
+import { useEffect } from "react";
+import PageNavigation from "../components/PageNavigation";
+import ProductImage from "../components/ProductImage";
+import { Container } from "../styles/Container";
+import FormatPrice from "../helpers/FormatPrice";
+import { MdSecurity } from "react-icons/md";
+import { TbTruckDelivery, TbReplace } from "react-icons/tb";
+import AddToCart from "../components/AddToCart";
+import Star from "../components/Star";
+
+const API = "https://api.pujakaitem.com/api/products";
 
 const SingleProduct = () => {
-  return <Wrapper></Wrapper>;
+  const { getSingleProduct, isSingleLoading, singleProduct } =
+    useProductContext();
+
+  const { id } = useParams();
+  const {
+    id: product_id,
+    name,
+    company,
+    price,
+    description,
+    category,
+    stock,
+    image,
+    reviews,
+    stars,
+  } = singleProduct;
+  useEffect(() => {
+    getSingleProduct(`${API}?id=${id}`);
+  }, []);
+
+  if (isSingleLoading) return <div className="page_loading">....LOADING</div>;
+
+  return (
+    <Wrapper>
+      <PageNavigation name={name} />
+      <Container className="container">
+        <div className="grid grid-two-column">
+          {image ? (
+            <div className="product-images">
+              <ProductImage imgs={image} />
+            </div>
+          ) : (
+            <div className="product-images"></div>
+          )}
+          <div className="product-data">
+            <h2 style={{ textTransform: "capitalize" }}>{name}</h2>
+            <Star stars={stars} reviews={reviews} />
+            <p>{stars}</p>
+            <p>{reviews}</p>
+            <p className="product-data-price">
+              MRP:{" "}
+              <del>
+                <FormatPrice price={price + 250000} />
+              </del>
+            </p>
+            <p className="product-data-price product-data-real-price">
+              Deal Of The Day: <FormatPrice price={price} />
+            </p>
+            <p>{description}</p>
+            <div className="product-data-warranty">
+              <div className="product-warranty-data">
+                <TbTruckDelivery className="warranty-icon" />
+                <p>Secure Delivery</p>
+              </div>
+
+              <div className="product-warranty-data">
+                <TbReplace className="warranty-icon" />
+                <p>15 Days Replacement</p>
+              </div>
+              <div className="product-warranty-data">
+                <MdSecurity className="warranty-icon" />
+                <p>2 Year Warranty</p>
+              </div>
+              <div className="product-warranty-data">
+                <TbTruckDelivery className="warranty-icon" />
+                <p>Super Fast Delivery</p>
+              </div>
+            </div>
+
+            <div className="product-data-info">
+              <p>
+                Available:{" "}
+                {stock > 0 ? (
+                  <span style={{ color: "#38ada9" }}>In Stock</span>
+                ) : (
+                  <span style={{ color: "#fa983a" }}>Out Of Stock</span>
+                )}
+              </p>
+              <p>
+                Id: <span>{id}</span>
+              </p>
+              <p>
+                Brand:{" "}
+                <span style={{ textTransform: "capitalize" }}>{company}</span>
+              </p>
+            </div>
+            <hr />
+            {stock > 0 ? <AddToCart product={singleProduct} /> : ""}
+          </div>
+        </div>
+      </Container>
+    </Wrapper>
+  );
 };
 const Wrapper = styled.section`
   .container {

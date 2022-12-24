@@ -8,6 +8,7 @@ import SingleProdcut from "./pages/SingleProduct";
 import ErrorPage from "./pages/ErrorPage";
 import Cart from "./pages/Cart";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import { GlobalStyle } from "./pages/GlobalStyle";
 import { ThemeProvider } from "styled-components";
 
@@ -18,8 +19,8 @@ const App = () => {
       text: "rgba(29 ,29, 29, .8)",
       white: "#fff",
       black: " #212529",
-      helper: "#8490ff",
-      bg: "#F6F8FA",
+      helper: "#18dcff",
+      bg: "#dfe4ea",
       footer_bg: "#0a1435",
       btn: "#1289A7",
       border: "#12CBC4",
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/singleproduct/:id" element={<SingleProdcut />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </ThemeProvider>
   );
