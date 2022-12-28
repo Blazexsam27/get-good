@@ -9,7 +9,14 @@ const FilterContext = createContext();
 const initialState = {
   filterProducts: [],
   allProducts: [],
-  gridView: false,
+  gridView: true,
+  sortingValue: "low-high",
+  filters: {
+    text: "",
+    category: "all",
+    company: "all",
+    color: "all",
+  },
 };
 
 export const FilterContextProvider = ({ children }) => {
@@ -20,12 +27,40 @@ export const FilterContextProvider = ({ children }) => {
     return dispatch({ type: "SET_GRIDVIEW" });
   };
 
+  const setListView = () => {
+    return dispatch({ type: "SET_LISTVIEW" });
+  };
+
+  const handleSort = (event) => {
+    let userValue = event.target.value;
+    dispatch({ type: "GET_SORT_VALUE", payload: userValue });
+  };
+
+  const updateFilterValue = (event) => {
+    let name = event.target.name;
+    let value = event.target.value;
+    return dispatch({ type: "UPDATE_FILTER_VALUE", payload: { name, value } });
+  };
+
+  useEffect(() => {
+    dispatch({ type: "FILTER_PRODUCTS" });
+    dispatch({ type: "GET_SORTED_PRODUCTS" });
+  }, [products, state.sortingValue, state.filters]);
+
   useEffect(() => {
     dispatch({ type: "LOAD_FILTER_PRODUCTS", payload: products });
   }, [products]);
 
   return (
-    <FilterContext.Provider value={{ ...state }}>
+    <FilterContext.Provider
+      value={{
+        ...state,
+        setGridView,
+        setListView,
+        handleSort,
+        updateFilterValue,
+      }}
+    >
       {children}
     </FilterContext.Provider>
   );
