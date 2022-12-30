@@ -11,7 +11,7 @@ function ListView({ products }) {
         {products.map((item) => {
           const { id, name, image, price, description } = item;
           return (
-            <div className="card grid grid-two-column">
+            <div className="card grid grid-two-column" key={id}>
               <figure>
                 <img src={image} alt={name} />
               </figure>
